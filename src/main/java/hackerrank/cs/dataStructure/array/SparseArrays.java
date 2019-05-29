@@ -9,27 +9,18 @@ public class SparseArrays {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 
-		int N = scanner.nextInt();
+		int n = scanner.nextInt();
 
-		List<String> set = new ArrayList<>();
+		Map<String, Integer> countMap = new HashMap<>();
 
-		for (int i=0 ; i<N ; i++) {
-			set.add(scanner.next());
+		for (int i = 0; i < n; i++) {
+			countMap.merge(scanner.next(), 1, Integer::sum);
 		}
 
-		int Q = scanner.nextInt();
+		int q = scanner.nextInt();
 
-		for (int i=0 ; i<Q ; i++) {
-			String qs = scanner.next();
-
-			int sum = 0;
-			for (String origin : set) {
-				if (origin.equals(qs)) {
-					sum++;
-				}
-			}
-
-			System.out.println(sum);
+		for (int i = 0; i < q; i++) {
+			System.out.println(countMap.getOrDefault(scanner.next(), 0));
 		}
 	}
 }

@@ -1,95 +1,55 @@
 package hackerrank.cs.dataStructure.linkedlist;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.Scanner;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * 분명히 맞게 짰는데 fail..
- * @author baejunbeom
+ * @author neo82
  */
 public class CycleDetection {
 	static class SinglyLinkedListNode {
-		public int data;
-		public SinglyLinkedListNode next;
+		int data;
+		SinglyLinkedListNode next;
 
-		public SinglyLinkedListNode(int nodeData) {
-			this.data = nodeData;
-			this.next = null;
-		}
-	}
-
-	static class SinglyLinkedList {
-		public SinglyLinkedListNode head;
-		public SinglyLinkedListNode tail;
-
-		public SinglyLinkedList() {
-			this.head = null;
-			this.tail = null;
-		}
-
-		public void insertNode(int nodeData) {
-			SinglyLinkedListNode node = new SinglyLinkedListNode(nodeData);
-
-			if (this.head == null) {
-				this.head = node;
-			} else {
-				this.tail.next = node;
-			}
-
-			this.tail = node;
-		}
-	}
-
-	public static void printSinglyLinkedList(SinglyLinkedListNode node, String sep, BufferedWriter bufferedWriter) throws IOException {
-		while (node != null) {
-			bufferedWriter.write(String.valueOf(node.data));
-
-			node = node.next;
-
-			if (node != null) {
-				bufferedWriter.write(sep);
-			}
-		}
-	}
-
-	private static final Scanner scanner = new Scanner(System.in);
-
-	public static void main(String[] args) throws Exception {
-		BufferedWriter bufferedWriter = null;
-		try {
-
-			int tests = scanner.nextInt();
-			scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-			for (int testsItr = 0; testsItr < tests; testsItr++) {
-				int index = scanner.nextInt();
-				scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-				SinglyLinkedList llist = new SinglyLinkedList();
-
-				int llistCount = scanner.nextInt();
-				scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-				for (int i = 0; i < llistCount; i++) {
-					int llistItem = scanner.nextInt();
-					scanner.skip("(\r\n|[\n\r\u2028\u2029\u0085])?");
-
-					llist.insertNode(llistItem);
-				}
-
-				boolean result = hasCycle(llist.head);
-
-				System.out.println(result);
-
-			}
-		} finally {
-			scanner.close();
+		SinglyLinkedListNode(int data, SinglyLinkedListNode next) {
+			this.data = data;
+			this.next = next;
 		}
 	}
 
 	static boolean hasCycle(SinglyLinkedListNode head) {
+		if (head == null) {
+			return false;
+		}
+
+		Set<SinglyLinkedListNode> set = new HashSet<>();
+
+		while (head != null) {
+			if (set.contains(head)) {
+				return true;
+			}
+
+			set.add(head);
+
+			head = head.next;
+		}
+
 		return false;
 	}
 
+	public static void main(String[] args) {
+		SinglyLinkedListNode head = new SinglyLinkedListNode(1, null);
+
+		SinglyLinkedListNode node6 = new SinglyLinkedListNode(3, head);
+		SinglyLinkedListNode node5 = new SinglyLinkedListNode(2, node6);
+		SinglyLinkedListNode node4 = new SinglyLinkedListNode(1, node5);
+		SinglyLinkedListNode node3 = new SinglyLinkedListNode(3, node4);
+		SinglyLinkedListNode node2 = new SinglyLinkedListNode(1, node3);
+
+		head.next = node2;
+
+		System.out.println(hasCycle(head));
+
+
+	}
 }
