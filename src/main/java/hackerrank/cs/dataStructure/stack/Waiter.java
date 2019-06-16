@@ -1,116 +1,99 @@
 package hackerrank.cs.dataStructure.stack;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Scanner;
+import java.util.Stack;
 
 /**
- *
+ * @author neo82
  */
 public class Waiter {
+	private static final int MAX = 87654321;
 
 	public static void main(String[] args) {
-
-		List<Integer> primeList = bitWiseSieve(25000);
-
 		Scanner scanner = new Scanner(System.in);
 
 		int n = scanner.nextInt();
 		int q = scanner.nextInt();
 
-		Stack<Integer> A = new Stack<Integer>();
+		Stack<Integer>[] stacks = new Stack[2];
+
+		for (int i = 0; i < 2; i++) {
+			stacks[i] = new Stack<>();
+		}
 
 		for (int i = 0; i < n; i++) {
-			A.push(scanner.nextInt());
+			stacks[0].push(scanner.nextInt());
 		}
 
-		List<Stack<Integer>> bList = new ArrayList<Stack<Integer>>();
+		StringBuilder result = new StringBuilder();
 
+		int [] primes = eratosthenes(q);
+
+		// pick up and pile
 		for (int i = 0; i < q; i++) {
-			int prime = primeList.get(i);
-			int size = new Integer(A.size());
+			Stack<Integer> A = stacks[i%2];
 
-			Stack<Integer> newA = new Stack<Integer>();
-			Stack<Integer> B = new Stack<Integer>();
+			StringBuilder sb = new StringBuilder();
 
-			while (size-- > 0) {
+			while (A.isEmpty() == false) {
 				int pop = A.pop();
 
-				if (pop % prime == 0) {
-					B.push(pop);
+				if (pop % primes[i] == 0) {
+					sb.insert(0, pop + "\n");
 				} else {
-					newA.push(pop);
+					stacks[(i+1)%2].push(pop);
 				}
 			}
 
-			bList.add(B);
-			A = newA;
+			result.append(sb.toString());
 		}
 
-		for (Stack<Integer> B : bList) {
-			while (!B.isEmpty()) {
-				System.out.println(B.pop());
+		// get plates from last Aq stack
+		result.append(getStringInAStack(stacks));
+
+		System.out.println(result.toString());
+	}
+
+	private static String getStringInAStack(Stack [] stacks) {
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < 2; i++) {
+			Stack<Integer> stack = stacks[i];
+
+			while (stack.isEmpty() == false) {
+				sb.append(stack.pop() + "\n");
 			}
 		}
 
-		while (!A.isEmpty()) {
-			System.out.println(A.pop());
-		}
-
+		return sb.toString();
 	}
 
+	private static int [] eratosthenes(int q) {
+		int [] primes = new int[q];
 
-	// Checks whether x is prime or composite
-	static int ifnotPrime(int prime[], int x)
-	{
-		// checking whether the value of element is set or not.
-		// Using prime[x/64]. we find the slot in prime array.
-		// To find the bit number, we divide x by 2 and take its mod with 32.
-		return (prime[x/64] & (1 << ((x >> 1) & 31)));
-	}
+		boolean [] isPrime = new boolean[MAX];
 
-	// Marks x composite in prime[]
-	static void makeComposite(int prime[], int x)
-	{
-		// Set a bit corresponding to given element.
-		// Using prime[x/64], we find the slot
-		// in prime array. To find the bit number,
-		// we divide x by 2 and take its mod with 32.
-		prime[x/64] |= (1 << ((x >> 1) & 31));
-	}
+		Arrays.fill(isPrime, true);
 
-	// Prints all prime numbers smaller than n.
-	static List<Integer> bitWiseSieve(int n)
-	{
-		// Assuming that n takes 32 bits,
-		// we reduce size to n/64 from n/2.
-		int prime[] = new int[n/64 + 1];
+		isPrime[0] = isPrime[1] = false;
 
+		int primeCount = 0;
 
-		// 2 is the only even prime so we
-		// can ignore that loop starts from
-		// 3 as we have used in sieve of
-		// Eratosthenes .
-		for (int i = 3; i * i <= n; i += 2) {
+		for (int i = 2; i < MAX; i++) {
+			if (isPrime[i]) {
+				primes[primeCount++] = i;
 
-			// If i is prime, mark all its
-			// multiples as composite
-			if (ifnotPrime(prime, i)==0) {
-				for (int j = i * i, k = i << 1; j < n; j += k) {
-					makeComposite(prime, j);
+				if (primeCount == q) {
+					return primes;
+				}
+
+				for (int j = i*i; j < MAX; j+=i) {
+					isPrime[j] = false;
 				}
 			}
 		}
 
-
-		List<Integer> primeList = new ArrayList<Integer>();
-		primeList.add(2);
-
-		// Printing other primes
-		for (int i = 3; i <= n; i += 2) {
-			if (ifnotPrime(prime, i) == 0) {
-				primeList.add(i);
-			}
-		}
-
-		return primeList;
+		return null;
 	}
 }
