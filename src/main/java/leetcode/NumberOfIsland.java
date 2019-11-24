@@ -1,61 +1,63 @@
 package leetcode;
-
-/*
-
-Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
-
-Example 1:
-
-11110
-11010
-11000
-00000
-Answer: 1
-
-Example 2:
-
-11000
-11000
-00100
-00011
-Answer: 3
-
-Credits:
-Special thanks to @mithmatt for adding this problem and creating all test cases.
-
-*/
-
-/**
- * @author baejunbeom
- */
 public class NumberOfIsland {
 
 	public int numIslands(char[][] grid) {
-		int count = 0;
+		if (grid.length == 0) {
+			return 0;
+		}
 
-		for (int x = 0 ; x < grid.length ; x++) {
-			for (int y = 0, z=y+1 ; y < grid[x].length ; y++) {
+		int cnt = 0;
+		boolean [][] visited = new boolean[grid.length][grid[0].length];
 
-				if (z <= grid[x].length && grid[x][z] == 1) {
-					continue;
+		for (int y = 0; y < grid.length; y++) {
+			for (int x = 0; x < grid[y].length; x++) {
+				if (grid[y][x] == '1' && visited[y][x] == false) {
+					dfs(visited, grid, y, x);
+					cnt++;
 				}
-
-				count++;
 			}
 		}
 
-		return count;
+		return cnt;
+	}
+
+	void dfs(boolean[][] visited, char[][] grid, int y, int x) {
+		visited[y][x] = true;
+
+		// left
+		if (isValid(visited, grid, y, x-1)) {
+			dfs(visited, grid, y, x-1);
+		}
+
+		// right
+		if (isValid(visited, grid, y, x+1)) {
+			dfs(visited, grid, y,x+1);
+		}
+
+		// up
+		if (isValid(visited, grid, y-1, x)) {
+			dfs(visited, grid, y-1, x);
+		}
+
+		// down
+		if (isValid(visited, grid, y+1, x)) {
+			dfs(visited, grid, y+1, x);
+		}
+	}
+
+	boolean isValid(boolean[][] visited, char[][] grid, int y, int x) {
+		if (y < 0 || y >= grid.length || x < 0 || x >= grid[0].length) {
+			return false;
+		}
+
+		if (visited[y][x] || grid[y][x] == '0') {
+			return false;
+		}
+
+		return true;
 	}
 
 	public static void main(String[] args) {
-		char [][] grids = {
-			{'1','1','1','1','0'},
-			{'1','1','0','1','0'},
-			{'1','1','0','0','0'},
-			{'0','0','0','0','0'}
-		};
-
-		NumberOfIsland numberOfIsland = new NumberOfIsland();
-		numberOfIsland.numIslands(grids);
 	}
+
 }
