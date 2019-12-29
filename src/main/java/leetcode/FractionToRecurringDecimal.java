@@ -15,8 +15,8 @@ public class FractionToRecurringDecimal {
 		sb.append((numerator > 0) ^ (denominator > 0) ? "-" : "");
 
 		// abs
-		long numer = Math.abs(numerator);
-		long deno = Math.abs(denominator);
+		long numer = Math.abs((long)numerator);
+		long deno = Math.abs((long)denominator);
 
 		// integral part
 		sb.append(numer / deno);
@@ -42,7 +42,7 @@ public class FractionToRecurringDecimal {
 			if (map.containsKey(numer)) {
 				int index = map.get(numer);
 
-				sb.insert(index,"(");
+				sb.insert(index, "(");
 				sb.append(")");
 				break;
 
@@ -56,7 +56,11 @@ public class FractionToRecurringDecimal {
 
 	public static void main(String[] args) {
 		FractionToRecurringDecimal fraction = new FractionToRecurringDecimal();
-		String res = fraction.fractionToDecimal(2, 3);
+		String res = fraction.fractionToDecimal(-1, -2147483648);
+
+		int a = -2147483648;
+		// 10000000000000000000000000000000
+		System.out.println(Integer.toBinaryString(a));
 
 		System.out.println(res);
 	}
