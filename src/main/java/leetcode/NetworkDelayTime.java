@@ -43,16 +43,11 @@ public class NetworkDelayTime {
 			// init adj
 			this.adj = new List[N];
 			for (int i = 0; i < N; i++) {
-				this.adj[i] = new ArrayList<Node>();
+				this.adj[i] = new ArrayList<>();
 			}
 
 			// init pq
-			this.pq = new PriorityQueue<Node>(N, new Comparator<Node>() {
-				@Override
-				public int compare(Node o1, Node o2) {
-					return o1.weight - o2.weight;
-				}
-			});
+			this.pq = new PriorityQueue<>(N, Comparator.comparingInt(o -> o.weight));
 
 			// init dist
 			this.dist = new int[N];
