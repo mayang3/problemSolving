@@ -1,9 +1,4 @@
-/*
- * @(#)google_1.java 2019. 04. 05.
- *
- * Copyright 2012 NHN Corp. All rights Reserved.
- * NHN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
- */
+
 package leetcode.google;
 
 import java.util.HashSet;
