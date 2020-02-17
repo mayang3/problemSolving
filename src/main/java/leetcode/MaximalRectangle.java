@@ -1,67 +1,87 @@
 package leetcode;
 
-import java.util.Stack;
-
 /**
- * @author baejunbeom
+ * @author neo82
  */
 public class MaximalRectangle {
 
+	/**
+	 *
+	 * @param matrix
+	 * @return
+	 */
 	public int maximalRectangle(char[][] matrix) {
-		if(matrix == null || matrix.length == 0 || matrix[0].length == 0) return 0;
-
-		int[] height = new int[matrix[0].length];
-
-		for(int i = 0; i < matrix[0].length; i ++){
-			if(matrix[0][i] == '1') height[i] = 1;
-		}
-
-		int result = largestInLine(height);
-
-		for(int i = 1; i < matrix.length; i ++){
-			resetHeight(matrix, height, i);
-			result = Math.max(result, largestInLine(height));
-		}
-
-		return result;
-	}
-
-	private void resetHeight(char[][] matrix, int[] height, int idx){
-		for (int i = 0; i < matrix[0].length; i ++) {
-
-			if (matrix[idx][i] == '1') {
-				height[i] += 1;
-			} else {
-				height[i] = 0;
-			}
-		}
-	}
-
-	public int largestInLine(int[] height) {
-		if (height == null || height.length == 0) {
+		if (matrix == null || matrix.length == 0) {
 			return 0;
 		}
 
-		int len = height.length;
+		int n = matrix.length;
+		int m = matrix[0].length;
 
-		Stack<Integer> s = new Stack<>();
+		int [][] heights = new int[n][m];
 
-		int maxArea = 0;
+		for (int y = 0; y < n; y++) {
+			for (int x = 0; x < m; x++) {
+				int num = Character.getNumericValue(matrix[y][x]);
 
-		for (int i = 0; i <= len; i++) {
-			int h = (i == len ? 0 : height[i]);
+				if (y == 0) {
+					heights[y][x] = num;
+				} else {
+					heights[y][x] = num == 0 ? 0 : heights[y-1][x] + num;
+				}
 
-			if(s.isEmpty() || h >= height[s.peek()]) {
-				s.push(i);
-			} else {
-				int tp = s.pop();
-				maxArea = Math.max(maxArea, height[tp] * (s.isEmpty() ? i : i - 1 - s.peek()));
-
-				i--;
 			}
 		}
 
-		return maxArea;
+		int area = 0;
+
+		for (int y = 0; y < n; y++) {
+			area = Math.max(area, solve(heights[y], 0, m-1));
+		}
+
+		return area;
+	}
+
+	private int solve(int[] heights, int l, int r) {
+		if (l == r) {
+			return heights[l];
+		}
+
+		int area = 0;
+
+		if (l < r) {
+			int m = (l + r) / 2;
+
+			// divide left and right
+			area = Math.max(solve(heights, l, m), solve(heights, m+1, r));
+
+			int left = m;
+			int right = m+1;
+			int height = Math.min(heights[left], heights[right]);
+
+			area = Math.max(area, (right-left+1) * height);
+			// from center
+			while (l < left || right < r) {
+
+				if (l == left && right < r) {
+					right++;
+					height = Math.min(height, heights[right]);
+				} else if (r == right && l < left) {
+					left--;
+					height = Math.min(height, heights[left]);
+				} else if (heights[left-1] >= heights[right+1]) {
+					left--;
+					height = Math.min(height, heights[left]);
+				} else {
+					right++;
+					height = Math.min(height, heights[right]);
+				}
+
+				area = Math.max(area, (right - left + 1) * height);
+			}
+		}
+
+		return area;
 	}
 
 	public static void main(String[] args) {
@@ -72,6 +92,5 @@ public class MaximalRectangle {
 			{'1','1','1','1','0','1'}
 		};
 		System.out.println(new MaximalRectangle().maximalRectangle(matrix));
-//		System.out.println(rectangle.length);
 	}
 }
