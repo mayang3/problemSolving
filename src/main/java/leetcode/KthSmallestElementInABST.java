@@ -1,7 +1,5 @@
 package leetcode;
 
-import com.sun.xml.internal.xsom.XSUnionSimpleType;
-
 import java.util.ArrayList;
 import java.util.List;
 
