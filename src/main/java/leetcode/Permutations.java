@@ -28,17 +28,20 @@ public class Permutations {
 			return;
 		}
 
+		// 뒤의 수를 먼저 넣는 경우 그 다음 단계에서 앞의 수까지 검사를 해야 하므로 항상 처음부터 loop 를 돌아야 한다.
 		for (int i = 0; i < nums.length; i++) {
 			if (visited[i]) {
 				continue;
 			}
 
+			// 현재 위치를 넣는 경우
 			visited[i] = true;
 			perm.add(nums[i]);
 
 			dfs(ret, perm, visited ,nums);
 
 			perm.remove(perm.size() - 1);
+			// 현재 위치의 수를 넣지 않고 다음 수로 넘어 가는 경우
 			visited[i] = false;
 		}
 	}
