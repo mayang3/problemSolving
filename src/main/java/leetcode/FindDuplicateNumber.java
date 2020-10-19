@@ -5,55 +5,31 @@ package leetcode;
  */
 public class FindDuplicateNumber {
 	public int findDuplicate(int[] nums) {
-		for (int i=0 ; i<nums.length-1 ; i++) {
-			int j = i+1;
-			int k = nums.length-1;
+		int tortoise = nums[0];
+		int hare = nums[0];
 
-			while(j<=k) {
-				if (nums[i] == nums[j]) {
-					return nums[i];
-				}
+		// 최초 시작 지점은 무조건 같으므로 do, while 로 실행시켜준다.
+		do {
+			tortoise = nums[tortoise];
+			hare = nums[nums[hare]];
+		} while (tortoise != hare);
 
-				if (nums[i] == nums[k]) {
-					return nums[i];
-				}
+		tortoise = nums[0];
 
-				j++;
-				k--;
-			}
+		while (tortoise != hare) {
+			tortoise = nums[tortoise];
+			hare = nums[hare];
 		}
 
-		return 0;
+		return hare;
 	}
 
-	int findDuplicate3(int [] nums)
-	{
-		if (nums.length >= 1)
-		{
-			int slow = nums[0];
-			int fast = nums[nums[0]];
-			while (slow != fast)
-			{
-				slow = nums[slow];
-				fast = nums[nums[fast]];
-			}
-
-			fast = 0;
-			while (fast != slow)
-			{
-				fast = nums[fast];
-				slow = nums[slow];
-			}
-			return slow;
-		}
-		return -1;
-	}
 
 	public static void main(String[] args) {
-		int [] nums = {4,5,56,789,344,323,556,78,90,12,4,3,2,1};
+		int [] nums = {1,3,4,2,2};
 
 		FindDuplicateNumber findDuplicateNumber = new FindDuplicateNumber();
-		int duplicate = findDuplicateNumber.findDuplicate3(nums);
+		int duplicate = findDuplicateNumber.findDuplicate(nums);
 
 		System.out.println(duplicate);
 
