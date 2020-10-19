@@ -1,7 +1,7 @@
 package leetcode;
 
 /**
- * @author baejunbeom
+ * @author neo82
  */
 public class FindDuplicateNumber {
 	public int findDuplicate(int[] nums) {
