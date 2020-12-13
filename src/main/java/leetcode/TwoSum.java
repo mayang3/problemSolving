@@ -10,32 +10,19 @@ import java.util.Map;
 public class TwoSum {
 
 	public int[] twoSum(int[] nums, int target) {
-		Map<Integer, Integer> numMap = new HashMap<>();
-
-		int [] ret = new int[2];
+		Map<Integer, Integer> map = new HashMap<>();
 
 		for (int i = 0; i < nums.length; i++) {
-			if (numMap.containsKey(target - nums[i])) {
+			int remains = target - nums[i];
 
-				int min = i;
-				int max = numMap.get(target - nums[i]);
-
-				if (min > max) {
-					int temp = min;
-					min = max;
-					max = temp;
-				}
-
-				ret[0] = min;
-				ret[1] = max;
-
-				return ret;
+			if (map.containsKey(remains)) {
+				return new int[] {map.get(remains), i};
 			} else {
-				numMap.put(nums[i], i);
+				map.put(nums[i], i);
 			}
 		}
 
-		return null;
+		return new int[2];
 	}
 
 	public static void main(String[] args) {
