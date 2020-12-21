@@ -36,7 +36,7 @@ public class InsertDeleteGetRandomO1 {
 			int lastIndex = this.dataList.size() - 1;
 
 
-			// 가장 끝 값보다 작을 경우, 맨 뒤로 항상 가게 해준다.
+			// 지워야 할 대상이 가장 끝 값보다 작을 경우, 맨 뒤로 항상 가게 해준다.
 			// 이렇게 하면, 나머지 인덱스를 모두 당길 필요가 없다.
 			if (removeIndex < lastIndex) {
 				int lastItem = dataList.get(lastIndex);
