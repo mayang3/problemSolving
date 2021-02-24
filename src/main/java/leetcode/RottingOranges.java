@@ -4,112 +4,85 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class RottingOranges {
-	public static void main(String[] args) {
-		int[][] grid = {{1}, {2}};
-
-		RottingOranges ro = new RottingOranges();
-		int res = ro.orangesRotting(grid);
-
-		System.out.println(res);
-	}
+	static int [][] DIRECTIONS = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 
 	public int orangesRotting(int[][] grid) {
-		if (grid == null || grid.length == 0) {
-			return -1;
-		}
+		int freshOranges = 0;
+		int minutes = 0;
 
 		Queue<Point> q = new LinkedList<>();
-
-		int oranges = 0;
-		int rottingOranges = 0;
 
 		for (int y = 0; y < grid.length; y++) {
 			for (int x = 0; x < grid[y].length; x++) {
 				if (grid[y][x] == 2) {
-					rottingOranges++;
 					q.add(new Point(y, x));
 				}
 
 				if (grid[y][x] == 1) {
-					oranges++;
+					freshOranges += 1;
 				}
 			}
 		}
-
-		if (oranges == 0) {
-			return 0;
-		}
-
-		if (rottingOranges == 0) {
-			return oranges == 0 ? 0 : -1;
-		}
-
-		int time = -1;
 
 		while (q.isEmpty() == false) {
-
-			Integer size = new Integer(q.size());
-
-			time++;
+			int size = Integer.valueOf(q.size());
+			boolean changed = false;
 
 			for (int i = 0; i < size; i++) {
+				Point currentPoint = q.poll();
 
-				Point p = q.poll();
+				int y = currentPoint.y;
+				int x = currentPoint.x;
 
-				int y = p.y;
-				int x = p.x;
+				for (int [] direction : DIRECTIONS) {
+					int nextY = y + direction[0];
+					int nextX = x + direction[1];
 
-				// up
-				if (isValid(grid, y - 1, x)) {
-					oranges--;
-					grid[y - 1][x] = 2;
-					q.add(new Point(y - 1, x));
+					if (isPossible(nextY, nextX, grid)) {
+						changed = true;
+						grid[nextY][nextX] = 2;
+						freshOranges -= 1;
+						q.add(new Point(nextY, nextX));
+					}
 				}
+			}
 
-				// down
-				if (isValid(grid, y + 1, x)) {
-					oranges--;
-					grid[y + 1][x] = 2;
-					q.add(new Point(y + 1, x));
-				}
-
-				// left
-				if (isValid(grid, y, x - 1)) {
-					oranges--;
-					grid[y][x - 1] = 2;
-					q.add(new Point(y, x - 1));
-				}
-
-				// right
-				if (isValid(grid, y, x + 1)) {
-					oranges--;
-					grid[y][x + 1] = 2;
-					q.add(new Point(y, x + 1));
-				}
-
+			if (changed) {
+				minutes++;
 			}
 		}
 
-		return oranges == 0 ? time : -1;
+		if (freshOranges > 0) {
+			return -1;
+		}
+
+		return minutes;
 	}
 
-	public boolean isValid(int[][] grid, int y, int x) {
+	private boolean isPossible(int y, int x, int[][] grid) {
 		if (y < 0 || y >= grid.length) {
 			return false;
-		} else if (x < 0 || x >= grid[0].length) {
+		} else if (x < 0 || x >= grid[y].length) {
 			return false;
 		}
 
 		return grid[y][x] == 1;
 	}
 
-	public static class Point {
+	static class Point {
 		int y;
 		int x;
 
-		Point(int y, int x) {
+		public Point(int y, int x) {
 			this.y = y;
 			this.x = x;
 		}
+	}
+
+	public static void main(String[] args) {
+		int[][] grid = {{1}, {2}};
+
+		RottingOranges rottingOranges = new RottingOranges();
+		System.out.println(rottingOranges.orangesRotting(grid));
 	}
 }
