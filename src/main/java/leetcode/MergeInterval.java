@@ -12,86 +12,55 @@ public class MergeInterval {
 	/**
 	 * @author baejunbeom
 	 */
-	public static class Interval {
-		int start;
-		int end;
-
-		Interval() {
-			start = 0;
-			end = 0;
-
+	public int[][] merge(int[][] intervals) {
+		if (intervals == null) {
+			return new int[0][0];
 		}
 
-		Interval(int s, int e) {
-			start = s;
-			end = e;
+		PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o[0]));
+
+		// O(NlogN)
+		for (int [] interval : intervals) {
+			pq.add(interval);
 		}
 
-		@Override
-		public String toString() {
-			final StringBuilder sb = new StringBuilder("Interval{");
-			sb.append("start=").append(start);
-			sb.append(", end=").append(end);
-			sb.append('}');
-			return sb.toString();
-		}
-	}
+		int start = -1;
+		int end = -1;
 
-	public List<Interval> merge(List<Interval> intervals) {
+		List<int[]> res = new ArrayList<>();
 
-		LinkedList<Interval> resultList = new LinkedList<>();
+		while (pq.isEmpty() == false) {
+			int[] poll = pq.poll();
 
-		if (intervals == null || intervals.isEmpty()) {
-			return resultList;
-		}
-
-		Collections.sort(intervals, (o1, o2) -> {
-			if (o1.start == o2.start) {
-				return 0;
+			if (end < poll[0]) {
+				if (end != -1) {
+					res.add(new int[] {start, end});
+				}
+				start = poll[0];
+				end = poll[1];
+			} else if (end >= poll[0]) {
+				end = Math.max(end, poll[1]);
 			}
-
-			return o1.start < o2.start ? -1 : 1;
-		});
-
-		for (Interval interval : intervals) {
-
-			if (resultList.isEmpty()) {
-				resultList.add(interval);
-				continue;
-			}
-
-			Interval last = resultList.getLast();
-
-			if (last.end < interval.start) {
-				resultList.addLast(interval);
-			} else if (last.start <= interval.start && last.end >= interval.start && last.end <= interval.end) {
-				last.end = interval.end;
-			}
-
 		}
 
+		if (end != -1) {
+			res.add(new int[] {start, end});
+		}
 
-		return resultList;
+		int [][] resArr = new int[res.size()][2];
+
+		for (int i = 0; i < resArr.length; i++) {
+			resArr[i] = res.get(i);
+		}
+
+		return resArr;
 	}
 
 	public static void main(String[] args) {
+		int [][] intervals = {{1,4},{4,5}};
 
 		MergeInterval mergeInterval = new MergeInterval();
-		List<Interval> merge = mergeInterval.merge(makeIntervalList());
-
-		System.out.println(merge);
-	}
-
-	private static List<Interval> makeIntervalList() {
-
-		List<Interval> intervalList = new ArrayList<>();
-
-		intervalList.add(new Interval(1,3));
-		intervalList.add(new Interval(2,6));
-		intervalList.add(new Interval(8,10));
-		intervalList.add(new Interval(15,18));
-
-		return intervalList;
+		System.out.println(Arrays.deepToString(mergeInterval.merge(intervals)));
 	}
 
 }
