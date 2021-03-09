@@ -1,41 +1,61 @@
 package leetcode;
 
-import java.util.Arrays;
-
 public class PermutationInString {
 	public boolean checkInclusion(String s1, String s2) {
-		int len1 = s1.length(), len2 = s2.length();
-		if (len1 > len2) return false;
 
-		int[] count = new int[26];
-		for (int i = 0; i < len1; i++) {
-			count[s1.charAt(i) - 'a']++;
-			count[s2.charAt(i) - 'a']--;
+		if (s1 == null || s1.length() == 0 || s2 == null || s2.length() == 0 || s1.length() > s2.length()) {
+			return false;
 		}
-		if (allZero(count)) return true;
 
-		for (int i = len1; i < len2; i++) {
-			count[s2.charAt(i) - 'a']--;
-			count[s2.charAt(i - len1) - 'a']++;
-			if (allZero(count)) return true;
+		int n1 = s1.length();
+		int n2 = s2.length();
+
+		int [] alpha = new int[26];
+
+		for (int i = 0; i < n1; i++) {
+			alpha[s1.charAt(i) - 'a']++;
 		}
+
+		for (int i = 0; i < n1; i++) {
+			alpha[s2.charAt(i) - 'a']--;
+		}
+
+		if (isPermutation(alpha)) {
+			return true;
+		}
+
+		for (int right = n1; right < n2; right++) {
+			int left = right - n1;
+
+			alpha[s2.charAt(right) - 'a']--;
+			alpha[s2.charAt(left) - 'a']++;
+
+			if (isPermutation(alpha)) {
+				return true;
+			}
+		}
+
 
 		return false;
 	}
 
-	private boolean allZero(int[] count) {
-		for (int i = 0; i < 26; i++) {
-			if (count[i] != 0) return false;
+	private boolean isPermutation(int[] alpha) {
+		for (int i = 0; i < alpha.length; i++) {
+			if (alpha[i] != 0) {
+				return false;
+			}
 		}
+
 		return true;
 	}
 
-
 	public static void main(String[] args) {
-		PermutationInString permutationInString = new PermutationInString();
+		String s1 = "ab";
+		String s2 = "eidboaoo";
 
-		boolean b = permutationInString.checkInclusion("ab", "eidboaoo");
+		PermutationInString ps = new PermutationInString();
 
-		System.out.println(b);
+		System.out.println(ps.checkInclusion(s1, s2));
+
 	}
 }
