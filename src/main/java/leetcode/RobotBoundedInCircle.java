@@ -4,44 +4,34 @@ import java.util.*;
 
 public class RobotBoundedInCircle {
 	public boolean isRobotBounded(String instructions) {
-
-		Queue<Character> q = new LinkedList<>();
-
-		for (char c : instructions.toCharArray()) {
-			q.add(c);
-		}
-		// north : 00
-		// west : 01
-		// south : 10
-		// east : 11
-		int loc = 0;
-		int x = 0;
+		// clockwise,
+		int pos = 0;
 		int y = 0;
+		int x = 0;
 
-		while (q.isEmpty() == false) {
-			char ch = q.poll();
+		for (int i = 0; i < instructions.length(); i++) {
+			char ins = instructions.charAt(i);
 
-			if ('G' == ch) {
-				if (loc == 0) {
-					y++;
-				} else if (loc == 1) {
-					x--;
-				} else if (loc == 2) {
+			if (ins == 'G') {
+				if (pos == 0) {
 					y--;
-				} else if (loc == 3) {
+				} else if (pos == 1) {
 					x++;
+				} else if (pos == 2) {
+					y++;
+				} else if (pos == 3) {
+					x--;
 				}
-
-			} else if ('L' == ch) {
-				loc = loc == 3 ? 0 : loc+1;
-			} else if ('R' == ch) {
-				loc = loc == 0 ? 3 : loc-1;
+			} else if (ins == 'L') {
+				pos = (pos + 3) % 4;
+			} else if (ins == 'R') {
+				pos = (pos + 1) % 4;
 			}
 		}
 
 		if (x == 0 && y == 0) {
 			return true;
-		} else if ((x != 0 || y != 0) && loc == 0) {
+		} else if ((x != 0 || y != 0) && pos == 0) {
 			return false;
 		}
 
