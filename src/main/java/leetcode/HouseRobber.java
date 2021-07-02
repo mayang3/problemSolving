@@ -5,7 +5,7 @@ package leetcode;
  */
 public class HouseRobber {
 	public int rob(int[] nums) {
-		if (nums.length == 0 || nums == null) {
+		if (nums == null || nums.length == 0) {
 			return 0;
 		} else if (nums.length == 1) {
 			return nums[0];
@@ -13,24 +13,26 @@ public class HouseRobber {
 			return Math.max(nums[0], nums[1]);
 		}
 
-		int before2 = nums[0];
-		int before1 = Math.max(nums[0], nums[1]);
-		int cur = 0;
-
-		for (int i = 2; i < nums.length; i++) {
-			cur = Math.max(before2 + nums[i], Math.max(before1, nums[i]));
-
-			before2 = before1;
-			before1 = cur;
-		}
-
-		return cur;
+		return Math.max(solve(nums, 0, nums.length-2), solve(nums, 1, nums.length-1));
 	}
 
-	public static void main (String[] args) {
-		HouseRobber houseRobber = new HouseRobber();
-		int rob = houseRobber.rob(new int[] {1,2,3,1});
+	public int solve(int [] nums, int start, int end) {
+		int [] dp = new int[nums.length];
 
-		System.out.println(rob);
+		dp[start] = nums[start];
+		dp[start+1] = Math.max(nums[start], nums[start+1]);
+
+		for (int i = start+2; i < end+1; i++) {
+			dp[i] = Math.max(dp[i-2] + nums[i], dp[i-1]);
+		}
+
+		return dp[end];
+	}
+
+	public static void main(String[] args) {
+		int [] house = {1,2,3};
+
+		HouseRobber hr2 = new HouseRobber();
+		System.out.println(hr2.rob(house));
 	}
 }
