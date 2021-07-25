@@ -1,34 +1,37 @@
 package leetcode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author baejunbeom
  */
 public class LongestCommonPrefix {
 	public String longestCommonPrefix(String[] strs) {
-		String prefix = "";
-		int max = 0;
-
-		for (int i = 1 ; i<strs.length ; i++) {
-			String before = strs[i-1];
-			String after = strs[i];
-
-			int index = after.indexOf(before);
-
-			if (index > max) {
-				max = index;
-				prefix = before.substring(0, index);
-			}
+		if (strs.length == 1) {
+			return strs[0];
 		}
 
-		return prefix;
+		int len = 0;
+
+		while (len < 200) {
+			if (strs[0].length() <= len) {
+				return strs[0].substring(0, len);
+			}
+
+			char ch = strs[0].charAt(len);
+
+			for (int i = 1; i < strs.length; i++) {
+				if (strs[i].length() <= len || ch != strs[i].charAt(len)) {
+					return strs[0].substring(0, len);
+				}
+			}
+
+			len++;
+		}
+
+		return strs[0].substring(0, len);
 	}
 
 	public static void main(String[] args) {
-		String [] aa = {"abc", "ab", "abcedf", "ab"};
+		String [] aa = {"flower1","flower123"};
 
 		LongestCommonPrefix prefix = new LongestCommonPrefix();
 		String s = prefix.longestCommonPrefix(aa);
