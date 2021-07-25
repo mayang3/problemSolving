@@ -7,46 +7,47 @@ import java.util.*;
  */
 public class TopKFrequentElements {
 	public static void main(String[] args) {
-		int [] nums = {1};
-		int k = 1;
+		int [] nums = {1,1,1,2,2,3};
+		int k = 2;
 
 		TopKFrequentElements topKFrequentElements = new TopKFrequentElements();
-		List<Integer> integers = topKFrequentElements.topKFrequent(nums, k);
-
-		System.out.println(integers);
+		System.out.println(Arrays.toString(topKFrequentElements.topKFrequent(nums, k)));
 	}
 
-	public List<Integer> topKFrequent(int[] nums, int k) {
+	public int [] topKFrequent(int[] nums, int k) {
 		Map<Integer, Integer> map = new HashMap<>();
 
 		for (int i = 0; i < nums.length; i++) {
 			map.merge(nums[i], 1, Integer::sum);
 		}
 
-		List<Node> nodeList = new ArrayList<>();
+		List<Integer> [] bucket = new List[nums.length+1];
 
 		for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-			nodeList.add(new Node(entry.getKey(), entry.getValue()));
+			int freq = entry.getValue();
+
+			if (bucket[freq] == null) {
+				bucket[freq] = new ArrayList<>();
+			}
+
+			bucket[freq].add(entry.getKey());
 		}
 
-		Collections.sort(nodeList, (o1, o2) -> o2.v - o1.v);
+		int i = 0;
+		int [] res = new int[k];
 
-		List<Integer> ret = new ArrayList<>();
+		for (int j = bucket.length-1; j >=0; j--) {
+			if (bucket[j] != null) {
+				for (int key : bucket[j]) {
+					res[i++] = key;
 
-		for (int i = 0; i < k; i++) {
-			ret.add(nodeList.get(i).k);
+					if (i == k) {
+						return res;
+					}
+				}
+			}
 		}
 
-		return ret;
-	}
-
-	static class Node {
-		int k;
-		int v;
-
-		Node(int k, int v) {
-			this.k = k;
-			this.v = v;
-		}
+		return res;
 	}
 }
