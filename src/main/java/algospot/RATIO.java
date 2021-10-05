@@ -45,7 +45,7 @@ public class RATIO {
 		int T = scanner.nextInt();
 
 		while (T-- > 0) {
-			int N = scanner.nextInt(); // gaems
+			int N = scanner.nextInt(); // games
 			int M = scanner.nextInt(); // won
 
 			System.out.println(neededGames(N, M));
