@@ -36,7 +36,7 @@ public class MaximumDistanceInArray {
 	public static void main(String[] args) {
 		List<List<Integer>> arr = new ArrayList<>();
 
-		arr.add(Arrays.asList(new Integer [] {1}));
+		arr.add(Arrays.asList(new Integer [] {1,2,3}));
 		arr.add(Arrays.asList(new Integer [] {1}));
 
 		MaximumDistanceInArray maximumDistanceInArray = new MaximumDistanceInArray();
