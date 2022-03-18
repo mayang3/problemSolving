@@ -12,7 +12,7 @@ public class MATCHFIX {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 
-		int C = scanner.nextInt();
+		int C = scanner.nextInt(); // 테스트 케이스의 수
 
 		while (C-- > 0) {
 			int N = scanner.nextInt(); // 참가하는 선수의 수
