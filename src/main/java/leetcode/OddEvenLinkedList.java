@@ -12,59 +12,37 @@ public class OddEvenLinkedList {
 		ListNode(int x) {
 			val = x;
 		}
-
-		@Override
-		public String toString() {
-			final StringBuilder sb = new StringBuilder("ListNode{");
-			sb.append("val=").append(val);
-			sb.append(", next=").append(next);
-			sb.append('}');
-			return sb.toString();
-		}
 	}
 
 	public ListNode oddEvenList(ListNode head) {
 		if (head == null) {
 			return null;
-		}
-
-		if (head.next == null) {
+		} else if (head.next == null) {
 			return head;
 		}
 
-		ListNode currentHead = head;
+		ListNode odd = head;
+		ListNode even = head.next;
+		ListNode evenHead = even;
+		ListNode cur = even.next;
+		boolean isOdd = true;
 
-		ListNode firstEvenNode = null;
-		ListNode currentEvenNode = null;
-
-		int i=1;
-
-		while(currentHead.next != null) {
-			ListNode next = currentHead.next;
-
-			int nextIndex = i+1;
-
-			if (nextIndex==2) {
-				firstEvenNode = next;
-				currentEvenNode = firstEvenNode;
-				currentHead.next = next.next;
-				i++;
-				continue;
-			} else if (nextIndex % 2 == 0) {
-				currentEvenNode.next = next;
-				currentEvenNode = next;
-				currentHead.next = next.next;
-				i++;
-				continue;
+		while (cur != null) {
+			if (isOdd) {
+				odd.next = cur;
+				odd = odd.next;
+				even.next = null;
+			} else {
+				even.next = cur;
+				even = even.next;
+				odd.next = null;
 			}
 
-			currentHead = currentHead.next;
-			i++;
+			cur = cur.next;
+			isOdd = !isOdd;
 		}
 
-		currentEvenNode.next = null;
-		// 짝수 리스트랑 연결
-		currentHead.next = firstEvenNode;
+		odd.next = evenHead;
 
 		return head;
 	}
@@ -73,7 +51,7 @@ public class OddEvenLinkedList {
 		ListNode head = new ListNode(1);
 		ListNode current = head;
 
-		for (int i=2 ; i<=5 ; i++) {
+		for (int i=2 ; i<=2 ; i++) {
 			current.next = new ListNode(i);
 			current = current.next;
 		}
@@ -86,6 +64,9 @@ public class OddEvenLinkedList {
 		OddEvenLinkedList oddEvenLinkedList = new OddEvenLinkedList();
 		ListNode listNode = oddEvenLinkedList.oddEvenList(oddEvenLinkedList.make());
 
-		System.out.println(listNode);
+		while (listNode != null) {
+			System.out.println(listNode.val);
+			listNode = listNode.next;
+		}
 	}
 }

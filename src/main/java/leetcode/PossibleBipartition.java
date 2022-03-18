@@ -1,26 +1,24 @@
 package leetcode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PossibleBipartition {
 
 	public boolean possibleBipartition(int N, int [][] dislikes) {
-		List<Integer>[] graph = new List[N];
+		Map<Integer, Set<Integer>> graph = new HashMap<>();
 
-		for (int i = 0; i < N; i++) {
-			graph[i] = new ArrayList<>();
+		for (int i = 0; i < dislikes.length; i++) {
+			int me = dislikes[i][0]-1;
+			int adjacent = dislikes[i][1]-1;
+
+			graph.computeIfAbsent(me, t -> new HashSet<>()).add(adjacent);
+			graph.computeIfAbsent(adjacent, t -> new HashSet<>()).add(me);
 		}
 
-		for (int [] d : dislikes) {
-			graph[d[0]-1].add(d[1]-1);
-			graph[d[1]-1].add(d[0]-1);
-		}
-
-		int [] group = new int[N];
+		int [] group  = new int[N];
 
 		for (int i = 0; i < N; i++) {
-			if (group[i] == 0 && !dfs(graph, group, i, 1)) {
+			if (group[i] == 0 && dfs(graph, group, i, 1) == false) {
 				return false;
 			}
 		}
@@ -28,27 +26,18 @@ public class PossibleBipartition {
 		return true;
 	}
 
-	/**
-	 * i 번째 node 에서 탐색하여 biPartition 가능한지 여부를 리턴.
-	 * @param graph
-	 * @param group
-	 * @param i
-	 * @param g
-	 * @return
-	 */
-	private boolean dfs(List<Integer>[] graph, int[] group, int i, int g) {
+	private boolean dfs(Map<Integer, Set<Integer>> graph, int[] group, int i, int g) {
 		group[i] = g;
 
-		for (int j = 0; j < graph[i].size(); j++) {
-			int next = graph[i].get(j);
+		if (graph.containsKey(i)) {
+			for (int there : graph.get(i)) {
+				if (group[there] == group[i]) {
+					return false;
+				}
 
-			// if the node connected with me is in the same group, then false.
-			if (group[next] == g) {
-				return false;
-			}
-
-			if (group[next] == 0 && !dfs(graph, group, next, -g)) {
-				return false;
+				if (group[there] == 0 && dfs(graph, group, there, g * -1) == false) {
+					return false;
+				}
 			}
 		}
 
@@ -56,10 +45,10 @@ public class PossibleBipartition {
 	}
 
 	public static void main(String[] args) {
-		int [][] dislikes = {{1,2}, {1,3}, {2,4}};
+		int [][] dislikes = {{1,2},{1,3},{2,3}};
 
 		PossibleBipartition possibleBipartition = new PossibleBipartition();
-		boolean b = possibleBipartition.possibleBipartition(4, dislikes);
+		boolean b = possibleBipartition.possibleBipartition(3, dislikes);
 		System.out.println(b);
 	}
 }
