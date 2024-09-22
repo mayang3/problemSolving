@@ -1,8 +1,9 @@
 package leetcode;
 
-import com.sun.org.apache.xpath.internal.objects.XStringForFSB;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class NQueens {
     Set<Integer> col = new HashSet<>();

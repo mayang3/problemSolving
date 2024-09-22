@@ -1,4 +1,4 @@
-package at_coder.grand_contest;
+package atcoder;
 
 import java.util.Arrays;
 import java.util.Scanner;
