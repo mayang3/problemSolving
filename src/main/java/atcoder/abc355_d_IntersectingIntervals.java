@@ -8,7 +8,7 @@ import java.util.Scanner;
 /**
  * @author neo82
  */
-public class abc355_d {
+public class abc355_d_IntersectingIntervals {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
